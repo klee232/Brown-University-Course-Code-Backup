@@ -85,7 +85,7 @@ for i_len=1:length_M
              % Check if the previous or next pixel falls out of the range
              % If previous pixel falls out of the range, just perform the comparison
              % for next pixel
-             if i_len_pre < 1 || i_wid_pre < 1
+             if (i_len_pre < 1 || i_wid_pre < 1) && (i_len_nex <= length_M && i_wid_nex <= width_M)
                  curr_pix_grad = M(i_len,i_wid);
                  nex_pix_grad = M(i_len_nex,i_wid_nex);
                  % If the current pixel is smaller than the next pixel, set
@@ -97,7 +97,7 @@ for i_len=1:length_M
                  end
              % If next pixel falls out of the range, just perform the comparison
              % for previous pixel
-             elseif i_len_nex > length_M || i_wid_nex > width_M
+             elseif (i_len_nex > length_M || i_wid_nex > width_M) && (i_len_pre >= 1 && i_wid_pre >= 1)
                 curr_pix_grad = M(i_len,i_wid);
                 pre_pix_grad = M(i_len_pre,i_wid_pre);
                 % If the current pixel is smaller than the previous pixel,
@@ -107,6 +107,11 @@ for i_len=1:length_M
                 else
                     max_sup_M(i_len,i_wid) = curr_pix_grad;
                 end
+             % If both previous pixel falls out of range, don't perform
+             % comparison store the current pixel gradient directly
+             elseif (i_len_pre < 1 || i_wid_pre < 1) && (i_len_nex > length_M || i_wid_nex > width_M)
+                 curr_pix_grad = M(i_len,i_wid);
+                 max_sup_M(i_len,i_wid) = curr_pix_grad;
              % If all the pixels are in the range, perform comparison on all
              % previous, current and next pixel
              else
@@ -179,7 +184,7 @@ for i_len=1:length_M
             % Check if the previous or next pixel falls out of the range
             % If previous pixel falls out of the range, just perform the comparison
             % for next pixel
-            if i_len_pre < 1 || i_wid_pre > width_M
+            if (i_len_pre < 1 || i_wid_pre > width_M) && (i_len_nex <= length_M && i_wid_nex >= 1) 
                 curr_pix_grad = M(i_len,i_wid);
                 nex_pix_grad = M(i_len_nex,i_wid_nex);
                 % If the current pixel is smaller than the next pixel, set
@@ -191,7 +196,7 @@ for i_len=1:length_M
                 end
              % If next pixel falls out of the range, just perform the comparison
              % for previous pixel
-             elseif i_len_nex > length_M || i_wid_nex < 1
+             elseif (i_len_nex > length_M || i_wid_nex < 1) && (i_len_pre >= 1 && i_wid_pre <= width_M)
                  curr_pix_grad = M(i_len,i_wid);
                  pre_pix_grad = M(i_len_pre,i_wid_pre);
                 % If the current pixel is smaller than the next pixel, set
@@ -201,7 +206,11 @@ for i_len=1:length_M
                 else
                     max_sup_M(i_len,i_wid) = curr_pix_grad;
                 end
-            
+             % If all pixels fall out of the range, don't perform
+             % comparioson and store the current magnitude directly
+            elseif (i_len_pre < 1 || i_wid_pre > width_M) && (i_len_nex > length_M || i_wid_nex < 1)
+                curr_pix_grad = M(i_len,i_wid);
+                max_sup_M(i_len,i_wid) = curr_pix_grad;
              % If all the pixels are in the range, perform comparison on all
              % previous, current and next pixel
              else
@@ -226,7 +235,7 @@ for i_len_edg=1:length_M
     for i_wid_edg=1:width_M
         % If the non max suppression value is below threshold, set it to zero, otherwise, set
         % it to 255
-        if max_sup_M(i_len,i_wid) < threshold
+        if max_sup_M(i_len_edg,i_wid_edg) < threshold
            edge_img(i_len_edg,i_wid_edg) = 0;
         else
            edge_img(i_len_edg,i_wid_edg) = 255;
@@ -234,9 +243,8 @@ for i_len_edg=1:length_M
     end
 end
 
-% Store Outcomes into Corresponding Directory
-mkdir problem2
-imwrite(edge_img,'problem2\edge_img.jpg');
+% Convert the Outcome Back to 8-Bit Unsinged Integer 
+edge_img = uint8(edge_img);
 
 
 end
