@@ -6,6 +6,32 @@ gray_image = rgb2gray(img);
 % Rescale the Image Data to a Range [0,1]
 rescale_image = im2double(gray_image);
 
+% Loop Through Each Pixel of the Image
+length_img = size(img,1);
+width_img = size(img,2);
+
+% Zero Padding through the Image f (Done for the Purpose of Falling Out of Range) 
+% Zero Padding through the Original Image
+num_pad = rad;
+for i_pad=1:num_pad
+    % Create padding for each direction (horizontal and vertical)
+    zero_pad_hzl = zeros(1,width_img+2*i_pad);
+    zero_pad_vtl = zeros(length_img+2*(i_pad-1),1);
+    % Concatenate zero padding for vertical direction
+    % If this is the first padding concatenate with the original image
+    % otherwise, concatenate it with the stored zero padded image
+    if i_pad == 1
+        zero_pad_image_temp = cat(2, zero_pad_vtl, rescale_image);
+    else
+        zero_pad_image_temp = cat(2, zero_pad_vtl, zero_pad_image_temp);
+    end
+    zero_pad_image_temp = cat(2, zero_pad_image_temp, zero_pad_vtl);
+    % Concatenate zero padding for horizontal direction
+    zero_pad_image_temp = cat(1, zero_pad_hzl, zero_pad_image_temp);
+    zero_pad_image_temp = cat(1, zero_pad_image_temp, zero_pad_hzl);
+end
+zero_pad_image = zero_pad_image_temp;
+
 orient_map = zeros(length_img,width_img);
 pre_edge_map = zeros(length_img,width_img);
 % Generate the Angles to Loop through
@@ -127,10 +153,8 @@ for i_len=rad+1:rad+1+(length_img-1)
                 var3 = (0.5).*(var1./var2);
                 var3 = var3(~isnan(var3));
                 chi_square = sum(var3, 'all');
-                disp('hist_up')
-                disp(hist_upp)
-                disp('hist_low')
-                disp(hist_low)
+                dist('hist_up')
+                disp(
                 disp('chi_square hihi')
                 disp(chi_square)
 
@@ -140,9 +164,9 @@ for i_len=rad+1:rad+1+(length_img-1)
                     max_angle = i_ang;
                 end  
             end
+            orient_map(i_len-(i_len-rad-1)*rad,i_wid-(i_wid-rad-1)*rad) = max_angle;
+            pre_edge_map(i_len-(i_len-rad-1)*rad,i_wid-(i_wid-rad-1)*rad) = max_chi_square;
         end
-        orient_map(i_len-(i_len-rad-1)*rad,i_wid-(i_wid-rad-1)*rad) = max_angle;
-        pre_edge_map(i_len-(i_len-rad-1)*rad,i_wid-(i_wid-rad-1)*rad) = max_chi_square;
     end
 end
 

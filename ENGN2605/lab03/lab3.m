@@ -1,4 +1,4 @@
-function lab3()
+function [edge_map dist] = lab3()
 
 % Problem 2
 mkdir problem2
@@ -53,7 +53,10 @@ can_edge_img6_param = auto_canny(image6,threshold,sigma);
 imwrite(can_edge_img6_param,'problem3\can_edge_img6_param.jpg');
 
 % Problem 4
-mkdir problem4
-[edge_map,orient_map] = hist_edge_detector(image1,1,8,10);
+% mkdir problem4
+[edge_map,dist] = hist_edge_detector(image1,1,8,10);
+imshow(edge_map)
+% Problem 5
+
 
 end
