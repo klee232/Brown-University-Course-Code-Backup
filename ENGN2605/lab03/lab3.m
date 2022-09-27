@@ -53,15 +53,85 @@ function lab3()
 % imwrite(can_edge_img6_param,'problem3\can_edge_img6_param.jpg');
 
 % Problem 4
-image2=imread('bds3.jpg');
+image2=imread('bds4.jpg');
 mkdir problem4
-[edge_map1_3 orient_map1_3] = hist_edge_detector(image2,5,8,16);
-figure(1);
-imshow(edge_map1_3)
+[edge_map1_3 orient_map1_3] = hist_edge_detector(image2,3,8,16);
 edge_map1_3(edge_map1_3 <200) = 0;
 edge_map1_3(edge_map1_3 >=200) = 255;
 edge_map1_3_f = edge_map1_3;
-imwrite(edge_map1_3,'problem4\edge_map3_5.jpg');
+imwrite(edge_map1_3,'problem4\edge_map4_3.jpg');
+
+[edge_map1_3 orient_map1_3] = hist_edge_detector(image2,5,8,16);
+edge_map1_3(edge_map1_3 <200) = 0;
+edge_map1_3(edge_map1_3 >=200) = 255;
+edge_map1_3_f = edge_map1_3;
+imwrite(edge_map1_3,'problem4\edge_map4_5.jpg');
+
+[edge_map1_3 orient_map1_3] = hist_edge_detector(image2,10,8,16);
+edge_map1_3(edge_map1_3 <200) = 0;
+edge_map1_3(edge_map1_3 >=200) = 255;
+edge_map1_3_f = edge_map1_3;
+imwrite(edge_map1_3,'problem4\edge_map4_10.jpg');
+
+[edge_map1_3 orient_map1_3] = hist_edge_detector(image2,20,8,16);
+edge_map1_3(edge_map1_3 <200) = 0;
+edge_map1_3(edge_map1_3 >=200) = 255;
+edge_map1_3_f = edge_map1_3;
+imwrite(edge_map1_3,'problem4\edge_map4_20.jpg');
+
+
+image2=imread('bds5.jpg');
+mkdir problem4
+[edge_map1_3 orient_map1_3] = hist_edge_detector(image2,3,8,16);
+edge_map1_3(edge_map1_3 <200) = 0;
+edge_map1_3(edge_map1_3 >=200) = 255;
+edge_map1_3_f = edge_map1_3;
+imwrite(edge_map1_3,'problem4\edge_map5_3.jpg');
+
+[edge_map1_3 orient_map1_3] = hist_edge_detector(image2,5,8,16);
+edge_map1_3(edge_map1_3 <200) = 0;
+edge_map1_3(edge_map1_3 >=200) = 255;
+edge_map1_3_f = edge_map1_3;
+imwrite(edge_map1_3,'problem4\edge_map5_5.jpg');
+
+[edge_map1_3 orient_map1_3] = hist_edge_detector(image2,10,8,16);
+edge_map1_3(edge_map1_3 <200) = 0;
+edge_map1_3(edge_map1_3 >=200) = 255;
+edge_map1_3_f = edge_map1_3;
+imwrite(edge_map1_3,'problem4\edge_map5_10.jpg');
+
+[edge_map1_3 orient_map1_3] = hist_edge_detector(image2,20,8,16);
+edge_map1_3(edge_map1_3 <200) = 0;
+edge_map1_3(edge_map1_3 >=200) = 255;
+edge_map1_3_f = edge_map1_3;
+imwrite(edge_map1_3,'problem4\edge_map5_20.jpg');
+
+image2=imread('bds6.jpg');
+mkdir problem4
+[edge_map1_3 orient_map1_3] = hist_edge_detector(image2,3,8,16);
+edge_map1_3(edge_map1_3 <200) = 0;
+edge_map1_3(edge_map1_3 >=200) = 255;
+edge_map1_3_f = edge_map1_3;
+imwrite(edge_map1_3,'problem4\edge_map6_3.jpg');
+
+[edge_map1_3 orient_map1_3] = hist_edge_detector(image2,5,8,16);
+edge_map1_3(edge_map1_3 <200) = 0;
+edge_map1_3(edge_map1_3 >=200) = 255;
+edge_map1_3_f = edge_map1_3;
+imwrite(edge_map1_3,'problem4\edge_map6_5.jpg');
+
+[edge_map1_3 orient_map1_3] = hist_edge_detector(image2,10,8,16);
+edge_map1_3(edge_map1_3 <200) = 0;
+edge_map1_3(edge_map1_3 >=200) = 255;
+edge_map1_3_f = edge_map1_3;
+imwrite(edge_map1_3,'problem4\edge_map6_10.jpg');
+
+[edge_map1_3 orient_map1_3] = hist_edge_detector(image2,20,8,16);
+edge_map1_3(edge_map1_3 <200) = 0;
+edge_map1_3(edge_map1_3 >=200) = 255;
+edge_map1_3_f = edge_map1_3;
+imwrite(edge_map1_3,'problem4\edge_map6_20.jpg');
+
 % figure(2);
 % imshow(edge_map1_3_f)
 % imwrite(edge_map1_3_f,'problem4\edge_map_img1_3.jpg')
