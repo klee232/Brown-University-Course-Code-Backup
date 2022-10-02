@@ -1,6 +1,10 @@
 function corners = corner_detector(image)
 % Convert the image from color to grayscale
-gray_image = rgb2gray(image);
+if size(image,3)==3
+    gray_image = rgb2gray(image);
+else
+    gray_image = image;
+end
 gray_image = double(gray_image);
 
 
@@ -12,21 +16,20 @@ gauss_filt = fspecial('gaussian',[wind_size wind_size],sigma);
 [Gx, Gy] = gradient(gauss_filt);
 
 % Convolve with input image
-f_x = conv2(gray_image,Gx);
-f_y = conv2(gray_image,Gy);
+f_x = conv2(gray_image,Gx,'same');
+f_y = conv2(gray_image,Gy,'same');
 
 % Create three spatial maps
 f_x_2 = f_x.*f_x;
 f_y_2 = f_y.*f_y;
 f_x_y = f_x.*f_y;
-
 % Create second gaussian filter
 sigma2 = 2.0;
 gauss_filt2 = fspecial('gaussian',[wind_size wind_size],sigma2);
 % Convolve with the three spatial maps
-s_x = conv2(f_x_2,gauss_filt2);
-s_y = conv2(f_y_2,gauss_filt2);
-s_xy = conv2(f_x_y,gauss_filt2);
+s_x = conv2(f_x_2,gauss_filt2,'same');
+s_y = conv2(f_y_2,gauss_filt2,'same');
+s_xy = conv2(f_x_y,gauss_filt2,'same');
 
 % Compute R
 % Retrieve the sizes of matrix s_x, s_y, and s_xy
@@ -50,6 +53,7 @@ for i_len=1:length_s
        R(i_len,i_wid) = R_val;
     end
 end
+
 
 % Conduct non-maximum suppression
 % Create non-max suppression storage
@@ -84,7 +88,7 @@ for i_len=1:length_s
        
        % check if the current pixel value matches the maximum
        % if it's less than the maximum, then ignore it
-       if R(i_len,i_wid) ~= max_regofint
+       if R(i_len,i_wid) < max_regofint
            non_max_M(i_len,i_wid)=0;
        else
            non_max_M(i_len,i_wid) = R(i_len,i_wid);
@@ -96,8 +100,11 @@ end
 R0 = 0.01*max(non_max_M,[],'all');
 non_max_M(find(non_max_M<R0)) = 0;
 
-corners = uint8(non_max_M);
-% corners = non_max_M;
+
+% corners = uint8(non_max_M);
+[corner_x, corner_y, strength] = find(non_max_M>0);
+
+corners = [corner_x, corner_y, strength];
 
 end
 
