@@ -7,7 +7,6 @@ else
 end
 gray_image = double(gray_image);
 
-
 % Create gaussian filter
 sigma=0.7;
 wind_size = ceil(6*sigma);
@@ -98,13 +97,13 @@ end
 
 % final thresholding stage
 R0 = 0.01*max(non_max_M,[],'all');
-non_max_M(find(non_max_M<R0)) = 0;
+non_max_M(non_max_M<R0) = 0;
 
 
 % corners = uint8(non_max_M);
-[corner_x, corner_y, strength] = find(non_max_M>0);
+[corner_y, corner_x, strength] = find(non_max_M);
 
-corners = [corner_x, corner_y, strength];
+corners = [corner_y, corner_x, strength];
 
 end
 

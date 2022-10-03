@@ -1,4 +1,4 @@
-function out = KLT_tracker(image_dir)
+function tracked_corners = KLT_tracker(image_dir)
 
 % Concatenate image in the folder
 directory = image_dir;
@@ -32,28 +32,110 @@ end
 first_img = store_image(:,:,1);
 corner_info1 = corner_detector(first_img);
 % Sorted out M Strongest Corners
-M = 20;
+num_M = 20;
 sorted_strong_corners = sortrows(corner_info1,3,'descend');
-sorted_strong_corners = sorted_strong_corners(:,:,1:M);
+sorted_strong_corners = sorted_strong_corners(1:num_M,:,:);
 
+% Create sotrage variable
+tracked_corners = zeros(num_M,2,num_files);
 for i_frame=1:num_files-1
-    tracked_corners(i_frame) = 0;
-    [dx dy] = gradient(store_image(:,:,i_frame));
-    for i_strength=1:M
-        [px py] = sorted_strong_corners(:,:,i_strength);
+    tracked_corners(:,:,i_frame) = 0;
+    [dx, dy] = gradient(store_image(:,:,i_frame));
+    strong_corners = zeros(num_M,2);
+    for i_strength=1:num_M
+        px = sorted_strong_corners((i_strength),1);
+        py = sorted_strong_corners((i_strength),2);
+        % create meshgrid with window size of 5*5
         m = 2;
-        x = px-m:px+m;
-        y = py-m:py+m;
+        x = px-m:0.125:px+m;
+        y = py-m:0.125:py+m;
         [X,Y] = meshgrid(x,y);
-        W = interp2(sorted_strong_corners(:,:,i_strength),x,y,0);
-        Ix = interp2(X,x,y,0);
-        Iy = interp2(Y,x,y,0);
+        % conduct interpolation for w and Ix and Iy
+        W0 = interp2(store_image(:,:,i_frame),X,Y,'linear',0);
+        Ix = interp2(dx,X,Y,'linear',0);
+        Iy = interp2(dy,X,Y,'linear',0);
+        % create variable for storing in M
+        Ix2 = 0;
+        Ixy = 0;
+        Iy2 = 0;
+        % looping through each element, sum up all the results and store them into correponding variables 
+        x_num = size(x,2);
+        y_num = size(y,2);
+        for i_x=x_num
+            for i_y=y_num
+                % create variable 
+                Ix2 = Ix2 + power(Ix(i_x,i_y),2);
+                Ixy = Ixy + Ix(i_x,i_y)*Iy(i_x,i_y);
+                Iy2 = Iy2 + power(Iy(i_x,i_y),2);
+            end
+        end
+        % Compute the final M
+        M = [Ix2 Ixy;Ixy Iy2];
+        % Setup V0 bar
+        V0_bar = [0 0];
+        v_bar_k_1 = V0_bar;
+        % iteration through K
+        K = 15;
+        threshold = 0.01;
+        for k=1:K
+            nx = x+V0_bar(1);
+            ny = y+V0_bar(2);
+            [wkx, wky] = meshgrid(nx,ny);
+            Wk = interp2(store_image(:,:,i_frame+1),wkx,wky,'linear',0);
+            delta_Ik = W0-Wk;
+            % Compute b_bar matrix
+            % create variable for storing
+            upp = 0;
+            low = 0;
+            for i_x=x_num
+                for i_y=y_num
+                    upp = upp+delta_Ik(i_x,i_y)*Ix(i_x,i_y);
+                    low = low+delta_Ik(i_x,i_y)*Iy(i_x,i_y);
+                end
+            end
+            b_bar = [upp;low];
+            error_k = inv(M)*b_bar;
+            v_bar_k = v_bar_k_1+error_k;
+            if norm(error_k) < threshold
+                strong_corners(i_strength,:) = [px py] + [v_bar_k(1) v_bar_k(2)];
+               break
+            else
+                strong_corners(i_strength,:) = 0;
+            end 
+        end
     end
-    
+    tracked_corners(:,:,i_frame) = strong_corners;
 end
 
+% check outcome
+x_coord = [];
+y_coord = [];
+for i_len=1:num_M
+    x = tracked_corners(i_len,1,num_files-1);
+    y = tracked_corners(i_len,2,num_files-1);
+    if x~=0 || y~=0
+        x_coord = cat(1, x_coord,x);
+        y_coord = cat(1, y_coord,y);
+    end
+end
+disp("x_coord")
+disp(x_coord)
+disp("y_coord")
+disp(y_coord)
+figure(1);
+img = imread("problem_2\rubix\rubik019.jpg");
+imshow(img)
+hold on
+plot(y_coord,x_coord,"ro");
+figure(2)
+img = imread("problem_2\rubix\rubik000.jpg");
+imshow(img)
+hold on
+plot(sorted_strong_corners(:,2),sorted_strong_corners(:,1),"ro");
+% Get the final coordinates of the implement tested coordinates
+% final_disp = sum(tracked_corners,3);
+% final_coord = sorted_strong_corners + final_disp;
 
 
 
-out = store_image;
 end

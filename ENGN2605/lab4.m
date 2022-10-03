@@ -1,4 +1,4 @@
-function out = lab4()
+function corners = lab4()
 
 % % Problem 1
 % image1 = imread('problem_1\board.png');
@@ -29,8 +29,9 @@ function out = lab4()
 % hold off
 
 % Problem 2
-dir1 = "problem_2\car";
-out = KLT_tracker(dir1);
+dir1 = "problem_2\rubix";
+corners = KLT_tracker(dir1);
+
 
 
 
