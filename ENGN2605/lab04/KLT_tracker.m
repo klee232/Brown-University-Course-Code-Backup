@@ -8,7 +8,7 @@ end
 
 % concatenate image in the folder
 % check how many images in the folder
-filePattern = fullfile(directory, '*.jpg');
+filePattern = fullfile(directory, '*.ppm');
 imagefiles = dir(filePattern);
 num_files = length(imagefiles);
 % create storage variable
@@ -115,6 +115,33 @@ for i_frame=1:num_files-1
         end
     end
     tracked_corners(:,:,i_frame) = strong_corners;
+    
+    % plot the current figure
+    % check outcome
+    x_coord = [];
+    y_coord = [];
+    for i_len=1:num_M
+        x = tracked_corners(i_len,1,i_frame);
+        y = tracked_corners(i_len,2,i_frame);
+        if x~=0 || y~=0
+            x_coord = cat(1, x_coord,x);
+            y_coord = cat(1, y_coord,y);
+        end
+    end
+    % plot the outcomes
+    % plot the final picture
+    imgs_dir = strcat(image_dir,'\*.ppm');
+    imgs_dir = dir(imgs_dir);
+    pic_dir = strcat(image_dir,'\',imgs_dir(i_frame+1).name);
+    img = imread(pic_dir);
+    imshow(img);
+    hold on 
+    plot(y_coord,x_coord,"ro");
+    mkdir problem_2\new_walking
+    newfilename = strcat('problem_2\new_walking','\','new',imgs_dir(i_frame+1).name);
+    disp(newfilename);
+    saveas(gcf,newfilename);
+    
 end
 
 % check outcome
@@ -131,7 +158,7 @@ end
 
 % plot the outcomes
 % plot the final picture
-imgs_dir = strcat(image_dir,'\*.jpg');
+imgs_dir = strcat(image_dir,'\*.ppm');
 imgs_dir = dir(imgs_dir);
 num_imgs = numel(imgs_dir);
 % read the file

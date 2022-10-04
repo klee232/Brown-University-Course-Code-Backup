@@ -38,10 +38,12 @@ dir1 = "problem_2\walking";
 corners = KLT_tracker(dir1,M);
 
 % Problem 3
-problem3();
+dir = "problem_3_and_4";
+set = "set1";
+problem3(dir,set);
 
 % Problem 4
-[pairs] = problem4();
+[pairs] = problem4(dir,set);
 [pairs_revised] = problem4_revised();
 
 % Problem 5

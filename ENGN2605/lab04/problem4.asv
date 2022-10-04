@@ -1,6 +1,6 @@
-function pairs = problem4(directory,set)
+function pairs = problem4()
 % read image
-dir = strcat(directory,'\',set,'\');
+dir = "problem_3_and_4\set1\";
 image1 = "img1.png";
 image2 = "img2.png";
 image1_dir = strcat(dir,image1);
@@ -97,23 +97,19 @@ else
     image1 = image1;
     image2 = image2;
 end
-mkdir problem_3_and_4\pair_outcome2
+mkdir problem_3_and_4\pair_outcome1
 figure(1);
 imshow(image1);
 hold on
 plot(f1(1,:),f1(2,:),"ro");
-filename=strcat('problem_3_and_4\pair_outcome2\','f1.png');
+filename=strcat('problem_3_and_4\pair_outcome1\','f1.png');
 saveas(gcf,filename);
 figure(2);
 imshow(image2);
 hold on
 plot(f2(1,:),f2(2,:),"ro");
-filename=strcat('problem_3_and_4\pair_outcome2\','f2.png');
-saveas(gcf,filename);
 figure(3);
 imshow(image2);
 hold on 
 plot(pairs(:,1),pairs(:,2),"ro");
-filename=strcat('problem_3_and_4\pair_outcome2\','outcome.png');
-saveas(gcf,filename);
 end

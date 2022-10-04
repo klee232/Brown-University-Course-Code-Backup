@@ -131,17 +131,24 @@ for i_img=1:num_imgs-1
    
    % plot the outcome 
    figure(1);
-   pic_dir = strcat('problem_5','\',img_dir(1).name);
-   img = imread(pic_dir);   
-   imshow(img);
    hold on
    grid on
-   plot([pairs(1:10,1),pairs(1:10,2)],[pairs(1:10,3),pairs(1:10,4)]);
-   hold on
+   plot([pairs(1:10,1),pairs(1:10,2)],[pairs(1:10,3),pairs(1:10,4)
 
 end
 % plot the outcome
+pic_dir = strcat('problem_5','\',img_dir(1).name);
+img = imread(pic_dir);   
+figure(1);
+imshow(img);
+hold on
+num_pairs = size(pairs,1);
+for i_iter_plot=1:num_pairs
+    plot([pairs(i_iter_plot,1),pairs(i_iter_plot,2)],[pairs(i_iter_plot,3),pairs(i_iter_plot,4)])
+    hold on
+end
 newfilename = strcat('problem_5','\','new',img_dir(1).name);
 saveas(gcf,newfilename);
+
 
 end
