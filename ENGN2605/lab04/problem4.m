@@ -16,12 +16,12 @@ else
     image2 = single(image2);
 end
 % compute sift frames
-peak_thresh = 10;
-edge_thresh = 7.5;
+peak_thresh = 0;
+edge_thresh = 10;
 % extract features from left image
 [f1,d1] = vl_sift(image1,'PeakThresh',peak_thresh,'edgethresh',edge_thresh);
 % load homography matrix
-hom_mat = readmatrix("problem_3_and_4\set1\H_1to2.txt");
+hom_mat = readmatrix("problem_3_and_4\set2\H_1to2.txt");
 hom_mat1 = hom_mat(1,:);
 hom_mat1 = hom_mat1(~isnan(hom_mat1));
 hom_mat2 = hom_mat(2,:);
@@ -114,6 +114,6 @@ figure(3);
 imshow(image2);
 hold on 
 plot(pairs(:,1),pairs(:,2),"ro");
-filename=strcat('problem_3_and_4\pair_outcome2\','outcome.png');
+filename=strcat('problem_3_and_4\pair_outcome4\','outcome.png');
 saveas(gcf,filename);
 end
